@@ -1,0 +1,329 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+//Parametros:
+void intervaloWKV(int, int []);
+void burbuja(int, int []); // orden ascendente
+void ordenamientoSeleccion(int, int []); // orden descendente
+void busquedaBinaria(int, int, int);
+void busquedaSecuencial(int, int [], int);
+void eliminarElemento(int, int [], int); //a= dato a eliminar
+void shell(int,int []); // orden descendente
+void quickSort(int [], int, int); // orden ascendente
+void swapf(int [], int [], int);//Intercambiar 2 fila de una matriz n= tama隳 de la fila
+void printm(int [][10], int ); //Imprimir matriz
+void caracol(int [][10], int);
+int vsum(int [], int); //Suma de un vector
+int vprod(int [], int); //Producto de un vector
+void may(int [][10], int, int, int&, int&, int&); //Mayor de una matriz
+double desv(double [][10], int, int);
+double prom(double [][10], int, int);
+void coor(char [][5], int[], int[], int, int, int &); //Busca la coordenada de algo repetitivo
+bool vaciotf(char [], int);
+void vacio(char a[][5],int,int,int&,int&); //Analiza si una columna solo contiene 1 dato
+int rev(int, int); //Invierte un numero recursivamente
+
+//Funciones
+void intervaloWKV(int n, int v[])
+{
+	srand(time(NULL));
+	int i=0, w=1, k=10;  //Inferior, Superior
+
+	for(int i=0;i<n;i++) {
+	v[i]= w+rand()%(k-w+1);
+				}
+}
+
+void burbuja(int n, int v[])
+{
+		int p;
+		int r;
+		int aux;
+		for(p=0;p<n;p++) {
+			for(r=p+1;r<n;r++){
+				if(v[p]>v[r]) {
+					aux= v[p];
+					v[p]=v[r];
+					v[r]=aux;
+				}
+			}
+		}
+}
+
+void ordenamientoSeleccion(int n, int v[])
+{
+	for (int i=0;i<n;i++) {
+		int may=i;
+		for (int j=i+1;j<n;j++) {
+			if  (v[j]>v[may]){
+				may=j;
+            }
+		}
+		int aux=v[i];
+		v[i]=v[may];
+		v[may]=aux;
+	}
+}
+
+void busquedaBinaria(int n, int v[], int dato)
+{ //indica la posicion del arreglo
+	int inf=0,sup=n,m=0,t=0;
+	burbuja(n,v);
+	for (int i=0;i<=n;i++){
+		m=(inf+sup)/2;
+		if (v[m]==dato) {
+			t=1;
+			i=n+2;
+		}
+		if (v[m]>dato) {
+			sup=m;
+			m=(inf+sup)/2;
+		}
+		if(v[m]<dato) {
+			inf=m;
+			m=(inf+sup)/2;
+		}
+	}
+	if (t==1) {
+		cout<<"Esta en la posicion: "<<m<<endl;
+	}else {
+		cout<<"Lo siento, no encontre el numero "<<endl;
+	}
+}
+
+void busquedaSecuencial(int n, int v[], int dato)
+{
+	int t=0,s=-1;
+	for (int i=0; i<n;i++) {
+		s++;
+		if (dato==v[i]) {
+			t=1;
+			i=n;
+		}
+	}
+	if (t==1) {
+		cout<<"Esta en la posicion: "<<s<<endl;
+	}else {
+		cout<<"Lo siento, no encontre el numero "<<endl;
+	}
+}
+
+void eliminarElemento(int n, int v[], int s) //a= dato a eliminar
+{
+	int a=0;
+	for (int i=0;i<n;i++,a++) {
+		if (v[i]==s) {
+			i++;
+			v[a]=v[i+1];
+		}else {
+			v[a]=v[i];
+		}
+	}
+	n--;
+}
+
+void shell(int n,int v[])// orden descendente
+{
+	   int salto, aux, i;
+	   bool cambios;
+	   for(salto=n/2; salto!=0; salto/=2){
+           cambios=true;
+           while(cambios){
+                       cambios=false;
+                       for(i=salto; i<n; i++)
+                            if(v[i-salto]<v[i]){
+                                aux=v[i];
+                                v[i]=v[i-salto];
+                                v[i-salto]=aux;
+                                cambios=true;
+                               }
+                        }
+    }
+}
+
+
+void quickSort(int v[], int inicio, int fin){
+    if(inicio>=fin) return;
+    int pivote=v[inicio];
+    int elemIzq=inicio+1;
+    int elemDer=fin;
+        while(elemIzq<=elemDer){
+               while(elemIzq<=fin && v[elemIzq]<pivote){
+                          elemIzq++;
+                 }
+               while(elemDer>inicio && v[elemDer]>=pivote){
+                          elemDer--;
+                 }
+                    if(elemIzq<elemDer){
+                         int temp=v[elemIzq];
+                             v[elemIzq]=v[elemDer];
+                            v[elemDer]=temp;
+                    }
+           }
+
+              if(elemDer>inicio){
+                       int temp=v[inicio];
+                       v[inicio]=v[elemDer];
+                       v[elemDer]=temp;
+             }
+                quickSort(v, elemDer+1, fin);
+                quickSort(v, inicio, elemDer-1);
+}
+
+void swapf(int a[], int b[], int n)
+{
+    for (int i=0;i<n;i++)
+        swap(a[i],b[i]);
+}
+
+void printm(int v[][10], int n)
+{
+    for (int i=0;i<n;i++)
+    {
+        for (int j=0;j<n;j++)
+        {
+            cout<<setw(3)<<v[i][j]<<setw(3);
+        }
+        cout<<endl;
+    }
+}
+
+void caracol(int m[][10], int n)
+{
+    int s=0,c=0, f=0, e=1;
+
+			while (e<=n*n){
+				for (c=s; c<n-s;c++) {
+					m[s][c]=e++;
+				}
+				for (f=s+1;f<n-s;f++) {
+					m[f][n-s-1]=e++;
+				}
+				for (c=n-s-2; c>=s;c--) {
+					m[n-s-1][c]=e++;
+				}
+				for (f=n-s-2;f>s; f--) {
+					m[f][s]=e++;
+				}
+				s++;
+			}
+    for (int i=0;i<n;i++)
+    {
+        for (int j=0;j<n;j++)
+            cout<<setw(3)<<m[i][j]<<setw(3);
+        cout<<endl;
+    }
+}
+
+int vsum(int v[], int n)
+{
+    if (n<0)
+        return 0;
+        return vsum(v,n-1) + v[n];
+}
+
+int vprod(int v[], int n)
+{
+    if (n<0)
+        return 1;
+        return vprod(v,n-1) * v[n];
+}
+
+void may(int v[][10], int n, int m, int &may, int &px, int &py)
+{
+    may=v[0][0];
+    for (int i=0;i<n;i++)
+    {
+        for (int j=0;j<m;j++)
+            {
+                if(v[i][j]>may)
+                {
+                    may=v[i][j];
+                    px = i+1;
+                    py = j+1;
+                }
+            }
+    }
+}
+
+double desv(double v[][10], int n, int m)
+{
+    double d=0, p=prom(v,n,m);
+    for (int i=0;i<n;i++)
+    {
+        for (int j=0;j<m;j++)
+            d+=pow(v[i][j]-p,2);
+    }
+    return sqrt(d/((m*n)-1));
+}
+
+double prom(double v[][10], int n, int m)
+{
+    double p=0;
+    for (int i=0;i<n;i++)
+    {
+        for (int j=0;j<m;j++)
+            p+=v[i][j];
+    }
+    return p/(m*n);
+}
+
+void coor(char v[][5],int x[], int y[], int n, int m, int &k)
+{
+for (int i=0;i<n;i++)
+{
+    for (int j=0;j<m;j++)
+        {
+            if (v[i][j]=='x')
+                {
+                    x[k]=i+1;
+                    y[k]=j+1;
+                    k++;
+                }
+        }
+}
+}
+
+void vacio(char v[][5],int n,int m,int& a,int& b)
+{
+    for(int i=0;i<n;i++)
+    {
+        if(vaciotf(v[i],n))
+            a++;
+    }
+
+    int k=0;
+    for(int j=0;j<m;j++)
+        {
+            k=0;
+            for(int i=0;i<n;i++)
+            {
+                if(v[i][j]=='o')
+                k++;
+            }
+            if(k==n)
+                b++;
+        }
+}
+
+bool vaciotf (char v[], int n)
+{
+    for(int i=0; i<n;i++)
+    {
+        if(v[i]=='x')
+            return false;
+    }
+    return true;
+}
+
+int rev(int n, int p)
+{
+    if (n<10)
+    {
+        return n;
+    }
+    else
+    {
+        return n%10*pow(10,p) + rev(n/10,p-1);
+    }
+}
